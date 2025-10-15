@@ -21,8 +21,8 @@ FreePiano 是一个虚拟 MIDI 键盘和 Windows 平台的钢琴。
 
 为了升级，请参考中文版文档：
 
-- 升级指南：![`docs/UPGRADE-1.8-to-2.2.2.1.md`](docs/UPGRADE-1.8-to-2.2.2.1.md)
-- 构建指南：![`BUILD.md`](BUILD.md)
+- 升级指南：[`docs/UPGRADE-1.8-to-2.2.2.1.md`](docs/UPGRADE-1.8-to-2.2.2.1.md)
+- 构建指南：[`BUILD.md`](BUILD.md)
 
 ## 更新日志
 **2013-06-24 FreePiano 1.8**
