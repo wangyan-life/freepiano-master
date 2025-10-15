@@ -1,31 +1,3 @@
-FreePiano（中文）
-=================
-
-FreePiano 是一个面向 Windows 的虚拟 MIDI 键盘与钢琴程序。
-
-你可以使用 FreePiano 用电脑键盘或 MIDI 键盘配合任意 VSTi 插件演奏钢琴；也可以通过 MIDI 输出或为按键生成任意 MIDI 消息。程序支持录制演奏并导出为 MP4 视频与 WAV 音频。
-
-![ScreenShot](res/screenshot.jpg)
-
-主要功能
---------
-
-- 完全免费，所有功能免费使用。
-- 支持 VSTi，免安装虚拟 MIDI 设备。
-- 支持多种音频输出：DirectSound、WASAPI、ASIO。
-- 支持自定义按键映射与显示。
-- 支持多套键盘布局，运行时可切换。
-- 支持直接导出 MP4。
-
-README 与附加文档
------------------
-本仓库当前包含 FreePiano 1.8 的源码。项目的官方最新稳定版本为 2.2.2.1，但该版本的完整源码/二进制未包含在本仓库中。
-
-为了升级，请参考中文版文档：
-
-- 升级指南：`docs/UPGRADE-1.8-to-2.2.2.1.md`
-- 构建指南（中文）：`BUILD.md`
-
 # [FreePiano](http://freepiano.tiwb.com)
 
 FreePiano 是一个虚拟 MIDI 键盘和 Windows 平台的钢琴。
@@ -43,6 +15,14 @@ FreePiano 是一个虚拟 MIDI 键盘和 Windows 平台的钢琴。
 * 可在演奏过程中随时切换多套键盘布局。
 * 直接将歌曲导出为 mp4 格式。
 
+## README 与附加文档
+
+本仓库当前包含 FreePiano 1.8 的源码。项目的官方最新稳定版本为 2.2.2.1，但该版本的完整源码/二进制未包含在本仓库中。
+
+为了升级，请参考中文版文档：
+
+- 升级指南：![`docs/UPGRADE-1.8-to-2.2.2.1.md`](docs/UPGRADE-1.8-to-2.2.2.1.md)
+- 构建指南：![`BUILD.md`](BUILD.md)
 
 ## 更新日志
 **2013-06-24 FreePiano 1.8**

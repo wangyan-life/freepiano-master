@@ -1,33 +1,3 @@
-FreePiano (English)
-=================
-
-FreePiano is a virtual MIDI keyboard and piano program for Windows.
-
-You can use FreePiano to play the piano using your computer keyboard or MIDI keyboard with any VSTi plug-in; you can also use MIDI output or generate arbitrary MIDI messages for key presses. The program supports recording performances and exporting them as MP4 video and WAV audio.
-
-![ScreenShot](res/screenshot.jpg)
-
-Main Features
---------
-
-- ​​Completely free, all features are free to use.
-- Supports VSTi, eliminating the need to install a virtual MIDI device.
-- Supports multiple audio outputs: DirectSound, WASAPI, and ASIO.
-- Supports custom key mapping and display.
-- Supports multiple keyboard layouts, switchable at runtime.
-- Supports direct MP4 export.
-
-README and Additional Documentation
------------------
-This repository currently contains the source code for FreePiano 1.8. The latest official stable version of the project is 2.2.2.1, but the full source code/binaries for this version are not included in this repository.
-
-For upgrading, please refer to the Chinese documentation:
-
-- Upgrade Guide: `docs/UPGRADE-1.8-to-2.2.2.1.md`
-- Build Guide (Chinese): `BUILD.md`
-
-
-
 # [FreePiano](http://freepiano.tiwb.com)
 
 FreePiano is a virtual MIDI keyboard and a piano for Windows.
@@ -45,6 +15,14 @@ You can use freepiano to Play piano with computer keyboard or MIDI keyboard with
 * Multi sets of keyboard layout can be switched anytime during play.
 * Export your song to mp4 directly.
 
+## README and Additional Documentation
+
+This repository currently contains the source code for FreePiano 1.8. The latest official stable version of the project is 2.2.2.1, but the full source code/binaries for this version are not included in this repository.
+
+For upgrading, please refer to the Chinese documentation:
+
+- Upgrade Guide: ![docs/UPGRADE-1.8-to-2.2.2.1.md](docs/UPGRADE-1.8-to-2.2.2.1.md)
+- Build Guide: ![BUILD.md](BUILD.md)
 
 ## Change logs
 **2013-06-24  FreePiano 1.8**
@@ -67,7 +45,6 @@ You can use freepiano to Play piano with computer keyboard or MIDI keyboard with
 * A new 'WAV' file exportor.
 * New update notification.
 * Fixed a bug that notes will lower an octave when copy group key maps.
-
 
 **2013-05-24  FreePiano 1.7**
 * Play settings page, can change midi output channel and voice.
@@ -94,7 +71,6 @@ You can use freepiano to Play piano with computer keyboard or MIDI keyboard with
   next note.
 * Fixed a bug that keyboard map script editor still has a length limit.
 
-
 **2013-01-28  FreePiano 1.5.2**
 * Fixed a bug that some configuration can not be saved.
 * The length of keyboard map script now has no limit.
@@ -120,7 +96,6 @@ You can use freepiano to Play piano with computer keyboard or MIDI keyboard with
   main screen.
 * Adds a option that can display original key or transcribed key.
 
-
 **2012-10-08  FreePiano 1.4**
 
 * Fixed language mistake on song info page.
@@ -132,7 +107,6 @@ You can use freepiano to Play piano with computer keyboard or MIDI keyboard with
   Acts more like Sustain pedal now.
 * Allows more than one command mapped to a single key.
 
-
 **2012-04-25  FreePiano 1.3**
 
 * Fixed a bug that volume and output buffer size can't be saved.
@@ -143,7 +117,6 @@ You can use freepiano to Play piano with computer keyboard or MIDI keyboard with
 * Keyboard map for FlashPiano layout is changed to display key names.
 * Adds MP4 video file export.
 
-
 **2011-06-26  FreePiano 1.2**
 
 * Fixed a bug that midi events not recorded.
@@ -153,7 +126,6 @@ You can use freepiano to Play piano with computer keyboard or MIDI keyboard with
   MIDI controller message.
 * New extension for MIDI program change message, same as controller message.
 * Programs, controller values can be save to group settings.
-
 
 **2011-05-27 FreePiano 1.1**
 
@@ -168,7 +140,6 @@ You can use freepiano to Play piano with computer keyboard or MIDI keyboard with
 * Adds copy paste support for keymap.
 * Adds disable resize window option.
 * Adds drag-drop support for config and song files.
-
 
 **2011-05-19 FreePiano 1.0**
 
