@@ -21,8 +21,8 @@ This repository currently contains the source code for FreePiano 1.8. The latest
 
 For upgrading, please refer to the Chinese documentation:
 
-- Upgrade Guide: ![docs/UPGRADE-1.8-to-2.2.2.1.md](docs/UPGRADE-1.8-to-2.2.2.1.md)
-- Build Guide: ![BUILD.md](BUILD.md)
+- Upgrade Guide: [`docs/UPGRADE-1.8-to-2.2.2.1.md`](docs/UPGRADE-1.8-to-2.2.2.1.md)
+- Build Guide: [`BUILD.md`](BUILD.md)
 
 ## Change logs
 **2013-06-24  FreePiano 1.8**
