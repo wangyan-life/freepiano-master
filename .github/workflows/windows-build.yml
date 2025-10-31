@@ -67,7 +67,8 @@ jobs:
       - name: Build solution
         run: |
           if (-not $env:MSBUILD_PATH) { Write-Error "MSBUILD_PATH not set"; exit 1 }
-          & $env:MSBUILD_PATH .\vc\freepiano.sln /p:Configuration=Release /p:Platform=${{ matrix.platform }} /m
+          # Force using VS2022 toolset for quick CI verification
+          & $env:MSBUILD_PATH .\vc\freepiano.sln /p:Configuration=Release /p:Platform=${{ matrix.platform }} /p:PlatformToolset=v143 /m
         shell: powershell
 
       - name: Gather artifacts
