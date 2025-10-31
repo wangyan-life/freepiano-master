@@ -1,0 +1,39 @@
+version: '{build}'
+image: Visual Studio 2022
+
+platform:
+  - x86
+  - x64
+
+configuration: Release
+
+build_script:
+  - ps: msbuild .\vc\freepiano.sln /p:Configuration=%configuration% /p:Platform=%platform% /m
+
+before_build:
+  # generate changelog when building a tag
+  - ps: |
+      if ($env:APPVEYOR_REPO_TAG -eq 'true') {
+        Write-Host "Calling shared changelog generator"
+        pwsh -NoProfile -NonInteractive -File .\scripts\gen_changelog.ps1 -TagName $env:APPVEYOR_REPO_TAG_NAME -OutFile changelog.txt
+      }
+
+after_build:
+  - ps: |
+      $out = "artifacts\$env:platform"
+      New-Item -ItemType Directory -Force -Path $out | Out-Null
+      Get-ChildItem -Path ".\vc\**\Release\**\freepiano.exe" -Recurse -ErrorAction SilentlyContinue | ForEach-Object { Copy-Item -Path $_.FullName -Destination $out -Force -ErrorAction SilentlyContinue }
+
+artifacts:
+  - path: artifacts\%platform%
+    name: freepiano-%platform%-Release
+    type: zip
+
+deploy:
+  - provider: GitHub
+    auth_token: $(github_token)
+    draft: false
+    on:
+      appveyor_repo_tag: true
+    artifact: artifacts\%platform%\**\*
+    release_notes_file: changelog.txt

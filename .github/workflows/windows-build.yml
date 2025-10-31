@@ -1,0 +1,128 @@
+name: Windows Build (MSBuild)
+
+on:
+  push:
+    tags: ["*"]
+  pull_request:
+
+jobs:
+  build:
+    name: Build ${{ matrix.platform }} Release
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        platform: [x86, x64]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prepare NuGet cache dir
+        shell: powershell
+        run: |
+          # Use runner temp folder for NuGet packages to make caching reliable across runners
+          $nugetCache = "$env:TEMP\nuget-packages"
+          New-Item -ItemType Directory -Force -Path $nugetCache | Out-Null
+          Write-Output "NUGET_PACKAGES=$nugetCache" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.NUGET_PACKAGES }}
+          key: ${{ runner.os }}-nuget-${{ matrix.platform }}-${{ hashFiles('**/*.sln') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Cache vcpkg (if present)
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ github.workspace }}\vcpkg\installed
+            ${{ github.workspace }}\vcpkg\downloads
+          key: ${{ runner.os }}-vcpkg-${{ matrix.platform }}-${{ hashFiles('vcpkg.json') }}
+          restore-keys: |
+            ${{ runner.os }}-vcpkg-
+
+      - name: Show MSBuild version
+        run: |
+          echo "Using MSBuild:";
+          msbuild -version
+        shell: powershell
+
+      - name: Build solution
+        run: msbuild .\vc\freepiano.sln /p:Configuration=Release /p:Platform=${{ matrix.platform }} /m
+        shell: powershell
+
+      - name: Gather artifacts
+        run: |
+          $out = "artifacts\${{ matrix.platform }}"
+          New-Item -ItemType Directory -Force -Path $out | Out-Null
+
+          # try common output locations and copy anything that looks like the built exe or release outputs
+          $candidates = @(
+            ".\vc\**\Release\**\*freepiano.exe",
+            ".\vc\**\bin\Release\**\*",
+            ".\**\Release\**\freepiano.exe",
+            ".\**\Release\**\*"
+          )
+
+          foreach($p in $candidates) {
+            Get-ChildItem -Path $p -ErrorAction SilentlyContinue -Recurse | ForEach-Object {
+              Copy-Item -Path $_.FullName -Destination $out -Force -ErrorAction SilentlyContinue
+            }
+          }
+        shell: powershell
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: freepiano-${{ matrix.platform }}-Release
+          path: artifacts/${{ matrix.platform }}
+
+  publish:
+    name: Create Release and Upload Artifacts
+    runs-on: ubuntu-latest
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download x86 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: freepiano-x86-Release
+          path: artifacts/x86
+
+      - name: Download x64 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: freepiano-x64-Release
+          path: artifacts/x64
+
+      - name: Generate changelog
+        if: always()
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run changelog script
+        if: always()
+        run: |
+          pwsh -NoProfile -NonInteractive -Command "& .\scripts\gen_changelog.ps1 -TagName '${{ github.ref_name }}' -OutFile changelog.txt"
+        shell: powershell
+
+      - name: Create GitHub Release and upload artifacts
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          files: |
+            artifacts/x86/*
+            artifacts/x64/*
+            changelog.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
