@@ -11,7 +11,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        platform: [x86, x64]
+        platform: [Win32]
 
     steps:
       - name: Checkout
@@ -107,17 +107,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Download x86 artifact
+      - name: Download Win32 artifact
         uses: actions/download-artifact@v4
         with:
-          name: freepiano-x86-Release
-          path: artifacts/x86
-
-      - name: Download x64 artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: freepiano-x64-Release
-          path: artifacts/x64
+          name: freepiano-Win32-Release
+          path: artifacts/Win32
 
       - name: Generate changelog
         if: always()
@@ -136,8 +130,7 @@ jobs:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
           files: |
-            artifacts/x86/*
-            artifacts/x64/*
+            artifacts/Win32/*
             changelog.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
