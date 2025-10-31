@@ -7,3 +7,4 @@ vc/Release
 *.aps
 nsis/*.exe
 data
+logs

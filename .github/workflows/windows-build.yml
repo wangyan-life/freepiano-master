@@ -47,12 +47,27 @@ jobs:
 
       - name: Show MSBuild version
         run: |
-          echo "Using MSBuild:";
-          msbuild -version
+          echo "Locating MSBuild using vswhere...";
+          $vswhere = 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe'
+          if (-Not (Test-Path $vswhere)) { Write-Host "vswhere not found at $vswhere, trying fallback..." }
+          $installPath = & $vswhere -latest -products * -requires Microsoft.Component.MSBuild -property installationPath 2>$null
+          if (-not $installPath) {
+            Write-Error "Visual Studio installation with MSBuild not found on runner."
+            exit 1
+          }
+          $msbuildPath = Join-Path $installPath "MSBuild\Current\Bin\MSBuild.exe"
+          if (-not (Test-Path $msbuildPath)) {
+            Write-Error "MSBuild.exe not found at $msbuildPath"
+            exit 1
+          }
+          Write-Output "MSBUILD_PATH=$msbuildPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
+          & $msbuildPath -version
         shell: powershell
 
       - name: Build solution
-        run: msbuild .\vc\freepiano.sln /p:Configuration=Release /p:Platform=${{ matrix.platform }} /m
+        run: |
+          if (-not $env:MSBUILD_PATH) { Write-Error "MSBUILD_PATH not set"; exit 1 }
+          & $env:MSBUILD_PATH .\vc\freepiano.sln /p:Configuration=Release /p:Platform=${{ matrix.platform }} /m
         shell: powershell
 
       - name: Gather artifacts
