@@ -30,6 +30,16 @@ static void show_error(const char *msg) {
 }
 
 #ifndef DISABLE_X264
+// optional debug dump helpers (no-op by default)
+static void dump_open(x264_t *encoder) { (void)encoder; }
+static void dump_close() {}
+static void dump_raw(void *data, size_t size) { (void)data; (void)size; }
+static void dump_264(void *data, size_t size) { (void)data; (void)size; }
+static void dump_aac(void *data, size_t size) { (void)data; (void)size; }
+
+// -----------------------------------------------------------------------------------------
+// H.264 DPB helpers
+// -----------------------------------------------------------------------------------------
 typedef struct {
   struct {
     int size_min;
@@ -67,7 +77,6 @@ static void DpbUpdate(h264_dpb_t *p, int is_forced) {
     if (p->dpb.poc[i] < p->dpb.poc[pos])
       pos = i;
   }
-  //fprintf(stderr, "lowest=%d\n", pos);
   /* save the idx */
   if (p->dpb.idx[pos] >= p->cnt_max) {
     int inc = 1000 + (p->dpb.idx[pos] - p->cnt_max);
@@ -111,9 +120,10 @@ static int DpbFrameOffset(h264_dpb_t *p, int idx) {
     return p->dpb.size_min;     /* We have an error (probably broken/truncated bitstream) */
   return p->dpb.size_min + p->frame[idx] - idx;
 }
-#endif
 
+// -----------------------------------------------------------------------------------------
 // playing thread
+// -----------------------------------------------------------------------------------------
 static DWORD __stdcall export_rendering_thread(void *parameter) {
   // temp buffer for vsti process
   const int samples_per_sec = 44100;

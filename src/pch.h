@@ -2,6 +2,11 @@
 
 #pragma warning(disable: 4819)
 
+// Enable x264 export only for 64-bit builds unless explicitly defined elsewhere
+#if defined(_WIN64) && !defined(ENABLE_X264)
+#define ENABLE_X264 1
+#endif
+
 #ifndef DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION         0x0800
 #endif
