@@ -459,7 +459,7 @@ static LRESULT CALLBACK vst_editor_wndproc(HWND hWnd, UINT uMsg, WPARAM wParam, 
      break;
 
    case WM_TIMER: {
-     AEffect *effect = (AEffect *)GetWindowLong(hWnd, GWL_USERDATA);
+     AEffect *effect = (AEffect *)GetWindowLongPtr(hWnd, GWLP_USERDATA);
 
      if (effect) {
        effect->dispatcher(effect, DECLARE_VST_DEPRECATED(effIdle), 0, 0, 0, 0);
@@ -474,7 +474,7 @@ static LRESULT CALLBACK vst_editor_wndproc(HWND hWnd, UINT uMsg, WPARAM wParam, 
      break;
 
    case WM_DESTROY: {
-     AEffect *effect = (AEffect *)GetWindowLong(hWnd, GWL_USERDATA);
+     AEffect *effect = (AEffect *)GetWindowLongPtr(hWnd, GWLP_USERDATA);
 
      if (effect)
        effect->dispatcher(effect, effEditClose, 0, 0, 0, 0);
@@ -521,7 +521,7 @@ static HWND create_effect_window(AEffect *effect) {
   HWND hwnd = CreateWindow("FreePianoVstEffect", effectName, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU, CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, NULL, NULL, GetModuleHandle(NULL), NULL);
 
   if (hwnd) {
-    SetWindowLong(hwnd, GWL_USERDATA, (LONG)effect);
+    SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(effect));
 
     ERect *eRect = 0;
     effect->dispatcher(effect, effEditOpen, 0, 0, hwnd, 0);

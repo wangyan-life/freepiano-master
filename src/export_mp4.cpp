@@ -8,12 +8,20 @@
 #include "config.h"
 #include "export.h"
 
+// If building with MSVC without MinGW x264 toolchain, disable x264-dependent MP4 export to avoid link errors.
+#if defined(_MSC_VER) && !defined(__MINGW32__) && !defined(ENABLE_X264)
+#define DISABLE_X264 1
+#endif
+
 #include "../3rd/mp4v2/mp4.h"
 #include "../3rd/libfaac/faac.h"
 
+#ifndef DISABLE_X264
 extern "C" {
+#include <stdint.h>
 #include "../3rd/libx264/include/x264.h"
 }
+#endif
 
 static HANDLE export_thread = NULL;
 
@@ -21,41 +29,17 @@ static void show_error(const char *msg) {
   puts(msg);
 }
 
-#if 0
-static FILE *fp_raw = NULL;
-static FILE *fp_264 = NULL;
-static FILE *fp_aac = NULL;
-static void dump_open(x264_t *encoder) {
-  fp_raw = fopen("dump.raw", "wb");
-  fp_264 = fopen("dump.264", "wb");
-  fp_aac = fopen("dump.aac", "wb");
-
-  if (1) {
-    x264_nal_t *headers;
-    int i_nal;
-    x264_encoder_headers(encoder, &headers, &i_nal);
-    for (int i = 0; i < i_nal; i++) {
-      fwrite(headers[i].p_payload, headers[i].i_payload, 1, fp_264);
-    }
-  }
-}
-static void dump_close() {
-  if (fp_raw) fclose(fp_raw);
-  if (fp_264) fclose(fp_264);
-  if (fp_aac) fclose(fp_aac);
-  fp_raw = fp_264 = fp_aac = NULL;
-}
-static void dump_raw(void *data, size_t size) { fwrite(data, size, 1, fp_raw); }
-static void dump_264(void *data, size_t size) { fwrite(data, size, 1, fp_264); }
-static void dump_aac(void *data, size_t size) { fwrite(data, size, 1, fp_aac); }
-#else
-static void dump_open(x264_t *encoder) {}
+#ifndef DISABLE_X264
+// optional debug dump helpers (no-op by default)
+static void dump_open(x264_t *encoder) { (void)encoder; }
 static void dump_close() {}
-static void dump_raw(void *data, size_t size) {}
-static void dump_264(void *data, size_t size) {}
-static void dump_aac(void *data, size_t size) {}
-#endif
+static void dump_raw(void *data, size_t size) { (void)data; (void)size; }
+static void dump_264(void *data, size_t size) { (void)data; (void)size; }
+static void dump_aac(void *data, size_t size) { (void)data; (void)size; }
 
+// -----------------------------------------------------------------------------------------
+// H.264 DPB helpers
+// -----------------------------------------------------------------------------------------
 typedef struct {
   struct {
     int size_min;
@@ -93,7 +77,6 @@ static void DpbUpdate(h264_dpb_t *p, int is_forced) {
     if (p->dpb.poc[i] < p->dpb.poc[pos])
       pos = i;
   }
-  //fprintf(stderr, "lowest=%d\n", pos);
   /* save the idx */
   if (p->dpb.idx[pos] >= p->cnt_max) {
     int inc = 1000 + (p->dpb.idx[pos] - p->cnt_max);
@@ -138,7 +121,9 @@ static int DpbFrameOffset(h264_dpb_t *p, int idx) {
   return p->dpb.size_min + p->frame[idx] - idx;
 }
 
+// -----------------------------------------------------------------------------------------
 // playing thread
+// -----------------------------------------------------------------------------------------
 static DWORD __stdcall export_rendering_thread(void *parameter) {
   // temp buffer for vsti process
   const int samples_per_sec = 44100;
@@ -449,3 +434,14 @@ int export_mp4(const char *filename) {
   export_done();
   return 0;
 }
+
+#else
+
+// Fallback stub when x264 is not available for this toolset
+int export_mp4(const char *filename) {
+  (void)filename;
+  show_error("MP4 export disabled: x264 library is not available for this build (x64 MSVC).\nPlease provide a 64-bit MSVC x264.lib (or define ENABLE_X264 with proper linkage).");
+  return -1;
+}
+
+#endif

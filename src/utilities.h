@@ -15,9 +15,8 @@ inline T wrap_value(T value, T min, T max) {
   return value;
 }
 
-inline float round(float x) {
-  return floor(x + 0.5f);
-}
+// Removed custom round() to avoid conflict with <cmath> in modern toolsets.
+// Use std::round if needed at call sites.
 
 template<class T>
 inline bool point_in_rect(T x, T y, T rect_x, T rect_y, T rect_w, T rect_h) {
