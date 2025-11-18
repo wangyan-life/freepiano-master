@@ -1,6 +1,13 @@
 .vs/
-vc/Debug
-vc/Release
+vc/Debug/
+vc/Release/
+vc/freepiano/
+vc/freetype2/
+vc/libfaac/
+vc/libmp4v2/
+vc/libpng/
+vc/x64/
+vc/zlib/
 *.cache
 *.sdf
 *.user
