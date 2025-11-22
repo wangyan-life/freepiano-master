@@ -1,0 +1,12 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="devpiano.vcxproj" Id="9fb5c3f5-ef33-4ce7-8264-88fc9a904f11" />
+  <Project Path="freetype.vcxproj" Id="78b079bd-9fc7-4b9e-b4a6-96da0f00248b" />
+  <Project Path="libfaac.vcxproj" Id="fb73ca17-68af-4ab7-9de2-40379b105eee" />
+  <Project Path="libmp4v2.vcxproj" Id="1c38f3a3-b73c-42ad-8753-348b635f328a" />
+  <Project Path="libpng.vcxproj" Id="3cacbf66-2e82-4937-98a6-084e0de5f761" />
+  <Project Path="zlib.vcxproj" Id="8cd7292d-d2fa-46f6-8927-88226c737299" />
+</Solution>
